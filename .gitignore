@@ -1,0 +1,3 @@
+# Ignore .o and .a files for commits
+*.a
+*.o
