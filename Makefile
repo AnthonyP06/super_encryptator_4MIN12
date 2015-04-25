@@ -1,16 +1,19 @@
 CC = gcc
 CFLAGS = -std=c99 -Wall -Werror -g -O0
 
-all: key_generator
+all: dictionary_test
 
-key_generator: key_generator.o
+dictionary_test: dictionary.o dictionary_test.o
 	$(CC) $(CFLAGS) $^ -o $@ 
 	
-key_generator.o: src/key_generator.c
+dictionary.o: src/dictionary.c
+	$(CC) $(CFLAGS) -c $^
+
+dictionary_test.o: test/dictionary_test.c
 	$(CC) $(CFLAGS) -c $^
 	
 clean: 
 	rm -rf *.a *.o
 
 distclean: clean
-	rm -rf key_generator.exe
+	rm -rf dictionary_test.exe

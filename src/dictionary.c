@@ -73,26 +73,3 @@ int is_valid(char* key)
 	// Everything is OK
 	return 1;
 }
-
-int main(int argc, char** argv)
-{
-	dictionary_t* dict = init_dict();
-	
-	for (int i = 0; i<sizeof(dict->regular_dict); ++i)
-	{
-		printf("Char %d : %c\n", i, dict->regular_dict[i]);
-	}
-	
-	char* key1 = "JDAcK";
-	printf("Is %s valid ? %d\n", key1, is_valid(key1));
-	char* key2 = "aakcjs";
-	printf("Is %s valid ? %d\n", key2, is_valid(key2));
-	char* key3 = "Kednchkl";
-	printf("Is %s valid ? %d\n", key3, is_valid(key3));
-	char* key4 = "";
-	printf("Is %s valid ? %d\n", key4, is_valid(key4));
-	char* key5 = "azertyuiopqsdfghjklmwxcvbn1234";
-	printf("Is %s valid ? %d\n", key5, is_valid(key5));
-	
-	destroy_dict(dict);
-}
