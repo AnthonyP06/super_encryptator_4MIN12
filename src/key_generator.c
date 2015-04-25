@@ -3,6 +3,9 @@
 
 #include "../include/dictionary.h"
 
+// Test de Colin
+printf("Je fais un test pour les commits");
+
 // Create a new dictionary
 dictionary_t* init_dict()
 {
