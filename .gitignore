@@ -1,3 +1,4 @@
-# Ignore .o and .a files for commits
+# Ignored files for commits: .a ; .o ; .exe
 *.a
 *.o
+*.exe
