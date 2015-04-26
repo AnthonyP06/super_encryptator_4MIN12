@@ -66,6 +66,23 @@ int main(int argc, char** argv)
 		destroy_dict(dict);
 	}
 	
+	// Check the file generation
+	{
+		// Impossible to generate a file from nothing
+		CHECK(generate_file(NULL, "dict_test") == -1);
+		
+		dictionary_t* dict = init_dict();
+		
+		if (dict != NULL)
+		{
+			assign_key(dict, "myKey");
+			CHECK(generate_file(dict, "") == -1);
+			CHECK(generate_file(dict, "dict_test") == 0);
+		}
+		
+		destroy_dict(dict);
+	}
+	
 	// Number of failures.
   printf("%lu failure(s)\n", nb_failures);
 	

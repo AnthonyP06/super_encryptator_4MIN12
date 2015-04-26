@@ -51,8 +51,11 @@ int main(int argc, char** argv)
 		{
 			printf("An error occurred. Dictionary not created.\n");
 			printf("Please re-launch the application.\n");
+			destroy_dict(dict);
 			return -1;
 		}
+		
+		destroy_dict(dict);
 		
 		return 0;
 	}
