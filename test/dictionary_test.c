@@ -30,6 +30,11 @@ int main(int argc, char** argv)
 			CHECK(dict->regular_dict[i] == i+32);
 		}
 		
+		destroy_dict(dict);
+	}
+	
+	// Check the validity of different keys
+	{
 		char* key1 = "JDAcK";
 		CHECK(is_valid(key1) == 1);
 		char* key2 = "aakcjs";
@@ -40,8 +45,8 @@ int main(int argc, char** argv)
 		CHECK(is_valid(key4) == 0);
 		char* key5 = "azertyuiopqsdfghjklmwxcvbn1234";
 		CHECK(is_valid(key5) == 0);
-		
-		destroy_dict(dict);
+		char* key6 = "ujd2";
+		CHECK(is_valid(key6) == 0);
 	}
 	
 	// Number of failures.

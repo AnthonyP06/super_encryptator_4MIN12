@@ -1,3 +1,5 @@
 # Ignore .o and .a files for commits
 *.a
 *.o
+*.exe
+dict/*
