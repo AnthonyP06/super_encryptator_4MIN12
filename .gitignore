@@ -1,4 +1,4 @@
-# Ignored files for commits: .a ; .o ; .exe
+# Ignored files for commits: .a ; .o ; .exe ; all files in 'dict/' repository
 *.a
 *.o
 *.exe

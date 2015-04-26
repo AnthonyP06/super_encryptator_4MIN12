@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 # include "../include/dictionary.h"
 
@@ -47,6 +48,22 @@ int main(int argc, char** argv)
 		CHECK(is_valid(key5) == 0);
 		char* key6 = "ujd2";
 		CHECK(is_valid(key6) == 0);
+	}
+	
+	// Check the assignment of a key.
+	{
+		// Impossible to assign a key to a NULL pointer.
+		CHECK(assign_key(NULL, "key") == -1);
+		
+		dictionary_t* dict = init_dict();
+		
+		if (dict != NULL)
+		{
+			CHECK(assign_key(dict, "myKey") == 0);
+			CHECK(strncmp(dict->key,"myKey",64) == 0);
+		}
+		
+		destroy_dict(dict);
 	}
 	
 	// Number of failures.

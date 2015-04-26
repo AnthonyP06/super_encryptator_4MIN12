@@ -30,6 +30,10 @@ int is_valid(char* key);
 // Assign a key to a dictionary. Returns 0 if everything is OK, -1 otherwise.
 int assign_key(dictionary_t* dict, char* key);
 
+// Generate a file with the dictionary, with the given name "dst".
+// Returns 0 if everything is OK, -1 otherwise.
+int generate_file(dictionary_t* dict, char* dst);
+
 // Prints both regular and encrypted dictionaries
 void print(dictionary_t* dict);
 

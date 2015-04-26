@@ -94,6 +94,41 @@ int assign_key(dictionary_t* dict, char* key)
 	}
 }
 
+// Generate a file with the dictionary, with the given name "dst".
+// Returns 0 if everything is OK, -1 otherwise.
+int generate_file(dictionary_t* dict, char* dst)
+{
+	// Non-existing dictionary.
+	if (dict == NULL)
+	{
+		return -1;
+	}
+	
+	// Pathname, max size : 64
+	char path[64] = "dict/";
+	strncat(path, dst, 64);
+	
+	// Create a new file to save the dictionary.
+	FILE* file = fopen(path, "w+");
+	
+	// Is the file correctly opened/created ?
+	if (file == NULL)
+	{
+		return -1;
+	}
+	
+	// Everything is OK.
+	fwrite(dict->key, sizeof(char), strlen(dict->key), file);
+	fputc('\n', file);
+	fwrite(dict->regular_dict, sizeof(char), sizeof(dict->regular_dict), file);
+	fputc('\n', file);
+	fwrite(dict->encrypted_dict, sizeof(char), sizeof(dict->encrypted_dict), file);
+	
+	fclose(file);
+	
+	return 0;
+}
+
 // Prints both regular and encrypted dictionaries
 void print(dictionary_t* dict)
 {
