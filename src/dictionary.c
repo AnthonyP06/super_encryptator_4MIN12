@@ -4,6 +4,10 @@
 
 #include "../include/dictionary.h"
 
+#define MAX_SIZE 128 //
+
+/* ---------------------------------------------------------------*/
+
 // Create a new dictionary. 
 // The regular dictionary is filled in with ASCII chars from 32 to 126.
 // The encrypted dictionary is initialized with a unique char : 'A'.
@@ -22,7 +26,7 @@ dictionary_t* init_dict()
 	dict->key = NULL;
 	
 	// Fill in the ASCII dictionary
-	for (int i = 0; i<sizeof(dict->regular_dict); ++i)
+	for (unsigned int i = 0; i<sizeof(dict->regular_dict); ++i)
 	{
 		dict->regular_dict[i] = 32+i;
 		dict->encrypted_dict[i] = 65; //'A'
@@ -30,6 +34,8 @@ dictionary_t* init_dict()
 	
 	return dict;
 }
+
+/* ---------------------------------------------------------------*/
 
 // Erase a dictionary
 void destroy_dict(dictionary_t* dict)
@@ -41,8 +47,10 @@ void destroy_dict(dictionary_t* dict)
 	}
 }
 
+/* ---------------------------------------------------------------*/
+
 // Check the validity of a key. Returns 1 if the key is valid, 0 otherwise.
-int is_valid(char* key)
+int is_valid(const char* key)
 {
 	// Is the key longer than the alphabet ?
 	if (strlen(key) > 26)
@@ -79,6 +87,8 @@ int is_valid(char* key)
 	return 1;
 }
 
+/* ---------------------------------------------------------------*/
+
 // Assign a key to a dictionary. Returns 0 if everything is OK, -1 otherwise.
 int assign_key(dictionary_t* dict, char* key)
 {
@@ -94,9 +104,54 @@ int assign_key(dictionary_t* dict, char* key)
 	}
 }
 
+/* ---------------------------------------------------------------*/
+
+// Assign an encrypted dictionary to a dictionary object. Returns 0 if everything is OK, -1 otherwise.
+int assign_encrypted_dict(dictionary_t* dict, const char* encrypted_dict)
+{
+	// The encrypted dictionary given as a parameter must be 95-chars length.
+	if (strlen(encrypted_dict) != 95)
+	{
+		return -1;
+	}
+	
+	// It's an error to assign something to an empty dictionary
+	if (dict == NULL)
+	{
+		return -1;
+	}
+	else
+	{
+		for(unsigned int i = 0; i<sizeof(dict->encrypted_dict); ++i)
+		{
+			dict->encrypted_dict[i] = *(encrypted_dict+i);
+		}
+		return 0;
+	}
+}
+
+/* ---------------------------------------------------------------*/
+
+// Returns the index of the encrypted dictionary where the char 'c' (given as a parameter) in located.
+// Returns -1 if the char 'c' is not in the dictionary.
+int index(const char c, const dictionary_t* dict)
+{
+	int position = -1;
+	for (unsigned int i=0; i<sizeof(dict->encrypted_dict); ++i)
+	{
+		if (dict->encrypted_dict[i] == c)
+		{
+			position = i;
+		}
+	}
+	return position;
+}
+
+/* ---------------------------------------------------------------*/
+
 // Generate a file with the dictionary, with the given name "dst".
 // Returns 0 if everything is OK, -1 otherwise.
-int generate_file(dictionary_t* dict, char* dst)
+int generate_file(dictionary_t* dict, const char* dst)
 {
 	// Non-existing dictionary.
 	if (dict == NULL)
@@ -104,9 +159,9 @@ int generate_file(dictionary_t* dict, char* dst)
 		return -1;
 	}
 	
-	// Pathname, max size : 64
-	char path[64] = "dict/";
-	strncat(path, dst, 64);
+	// Path where the dictionary file will be created
+	char path[MAX_SIZE] = "dict/";
+	strncat(path, dst, MAX_SIZE);
 	
 	// Create a new file to save the dictionary.
 	FILE* file = fopen(path, "w+");
@@ -129,8 +184,71 @@ int generate_file(dictionary_t* dict, char* dst)
 	return 0;
 }
 
+/* ---------------------------------------------------------------*/
+
+// Create a dictionary object from a dictionary file named "src".
+// Returns the dictionary is everything is OK, a NULL pointer otherwise.
+dictionary_t* upload_dict(const char* src)
+{
+	// Path where the dictionary is stored
+	char path[MAX_SIZE] = "dict/";
+	strncat(path, src, MAX_SIZE);
+	
+	FILE* file = fopen(path, "r");
+	
+	// Is the file correctly opened ?
+	if (file == NULL)
+	{
+		printf("Impossible to upload the dictionary. Please check the filename.\n");
+		printf("Please re-launch the application.\n");
+		return NULL;
+	}
+	
+	dictionary_t* dict = init_dict();
+	
+	// Is the dictionary correctly created ?
+	if (dict == NULL)
+	{
+		printf("Impossible to upload the dictionary.\n");
+		printf("Please re-launch the application.\n");
+		fclose(file);
+		return NULL;
+	}
+	
+	char line[MAX_SIZE] = "";
+	fgets(line, MAX_SIZE, file); // Dictionary's key.
+	line[strlen(line)-1] = '\0'; // Delete the '\n' at the end of the line.
+	
+	// Is the key well assigned ?
+	if(assign_key(dict, line) == -1)
+	{
+		printf("Impossible to upload the dictionary.\n");
+		printf("Please re-launch the application.\n");
+		fclose(file);
+		return NULL;
+	}
+	
+	fgets(line, MAX_SIZE, file); // ASCII dictionary, already filled in thanks to the init_dict() function.
+	fgets(line, MAX_SIZE, file); // Encrypted dictionary
+	
+	// Is the encrypted dictionary well assigned ?
+	if(assign_encrypted_dict(dict, line) == -1)
+	{
+		printf("An error occurred. Dictionary not created.\n");
+		printf("Please re-launch the application.\n");
+		fclose(file);
+		return NULL;
+	}
+	
+	// Everything is OK
+	fclose(file);
+	return dict;
+}
+
+/* ---------------------------------------------------------------*/
+
 // Prints both regular and encrypted dictionaries
-void print(dictionary_t* dict)
+void print(const dictionary_t* dict)
 {
 	if (dict != NULL)
 	{
