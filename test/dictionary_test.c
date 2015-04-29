@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	{
 		dictionary_t* dict = init_dict();
 		
-		for (int i = 0; i<SIZE_DICT; ++i)
+		for (int i = 0; i<sizeof(dict->regular_dict); ++i)
 		{
 			CHECK(dict->regular_dict[i] == i+32);
 		}
@@ -61,25 +61,6 @@ int main(int argc, char** argv)
 		{
 			CHECK(assign_key(dict, "myKey") == 0);
 			CHECK(strncmp(dict->key,"myKey",MAX_KEY_SIZE) == 0);
-		}
-		
-		destroy_dict(dict);
-	}
-	
-	// Check the assignment of an encrypted dictionary
-	{
-		// Impossible to assign an encrypted dictionary to a NULL pointer
-		CHECK(assign_encrypted_dict(NULL, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~") == -1)
-		
-		dictionary_t* dict = init_dict();
-		
-		if (dict != NULL)
-		{
-			// Too short dictionary to be assigned.
-			CHECK(assign_encrypted_dict(dict, "DICTIONARY") == -1);
-			
-			CHECK(assign_encrypted_dict(dict, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~") == 0);
-			CHECK(strncmp(dict->encrypted_dict, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", SIZE_DICT) == 0);
 		}
 		
 		destroy_dict(dict);
@@ -125,7 +106,6 @@ int main(int argc, char** argv)
 			if(dict_up != NULL);
 			{
 				CHECK(strncmp(dict->key, "myKey", MAX_KEY_SIZE) == 0);
-				CHECK(strncmp(dict->regular_dict, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", SIZE_DICT) == 0);
 				CHECK(strncmp(dict->encrypted_dict, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", SIZE_DICT) == 0);
 			}
 		}

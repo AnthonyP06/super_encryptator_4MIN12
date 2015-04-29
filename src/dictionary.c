@@ -208,6 +208,8 @@ dictionary_t* upload_dict(const char* src)
 	// Is the file correctly opened ?
 	if (file == NULL)
 	{
+		printf("Impossible to upload the dictionary %s. Please check the file name.\n", src);
+		printf("Please re-launch the application.\n");
 		return NULL;
 	}
 	
@@ -216,6 +218,8 @@ dictionary_t* upload_dict(const char* src)
 	// Is the dictionary correctly created ?
 	if (dict == NULL)
 	{
+		printf("Impossible to upload the dictionary.\n");
+		printf("Please re-launch the application.\n");
 		fclose(file);
 		return NULL;
 	}
@@ -227,6 +231,8 @@ dictionary_t* upload_dict(const char* src)
 	// Is the key well assigned ?
 	if(assign_key(dict, line) == -1)
 	{
+		printf("Impossible to upload the dictionary.\n");
+		printf("Please re-launch the application.\n");
 		fclose(file);
 		return NULL;
 	}
@@ -237,6 +243,8 @@ dictionary_t* upload_dict(const char* src)
 	// Is the encrypted dictionary well assigned ?
 	if(assign_encrypted_dict(dict, line) == -1)
 	{
+		printf("Impossible to upload the dictionary\n");
+		printf("Please re-launch the application.\n");
 		fclose(file);
 		return NULL;
 	}

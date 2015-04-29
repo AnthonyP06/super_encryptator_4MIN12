@@ -7,29 +7,25 @@ int main(int argc, char** argv)
 {
 	dictionary_t* dict = upload_dict("dict_test");
 	
-	if (dict == NULL)
-	{
-		printf("Impossible to upload the dictionary dict_test. Please check the file name.\n");
-		printf("Please re-launch the application.\n");
-		return -1;
-	}
-	
 	print(dict);
 	
 	FILE* file = fopen("the_little_prince.txt", "r");
 	FILE* encrypt = fopen("encrypted_text.txt", "w+");
 	
-	char c = ' ';
-	while (c != EOF)
+	if (dict != NULL)
 	{
-		c = fgetc(file);
-		if (c == '\n')
+		char c = ' ';
+		while (c != EOF)
 		{
-			fputc(c, encrypt);
-		}
-		else
-		{
-			fputc(dict->encrypted_dict[c-32], encrypt);
+			c = fgetc(file);
+			if (c == '\n')
+			{
+				fputc(c, encrypt);
+			}
+			else
+			{
+				fputc(dict->encrypted_dict[c-32], encrypt);
+			}
 		}
 	}
 	
