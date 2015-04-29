@@ -45,15 +45,25 @@ int main(int argc, char** argv)
 		
 		// Assign the key
 		assign_key(dict, argv[1]);
-		
-		// Generate the dictionary.
-		if (generate_file(dict, argv[2]) == -1)
+
+		// Encrypt the dictionary
+		if (encrypted_dict(dict, argv[1]) == -1)
 		{
 			printf("An error occurred. Dictionary not created.\n");
 			printf("Please re-launch the application.\n");
 			destroy_dict(dict);
 			return -1;
 		}
+
+		print(dict);
+
+/*		if (generate_file(dict, argv[2]) == -1)
+		{
+			printf("An error occurred. Dictionary not created.\n");
+			printf("Please re-launch the application.\n");
+			destroy_dict(dict);
+			return -1;
+		}*/
 		
 		destroy_dict(dict);
 		
