@@ -47,6 +47,52 @@ dictionary_t* init_dict()
 
 /* ---------------------------------------------------------------*/
 
+int encrypted_dict(dictionary_t* dict, char* key)
+{
+	if(is_valid(key) == -1)
+	{
+		return -1;
+	}
+
+	// Capitalize the key (does not change the result)
+	capitalize_key(key);
+	
+	// Fill the encrypted dictionary with the key
+	for(int i = 0; i < strlen(key); i++)
+	{
+		dict->encrypted_dict[i+33] = *(key+i);
+		dict->encrypted_dict[i+65] = dict->encrypted_dict[i+33]+32;
+	}
+
+	//Fill the last cases of the encryted dictionary
+	int compteur = 0;							// Boolean
+	int compteurClef = 0;						// Number of letter of the key already read
+	for(int i = 65; i <= 90; i++)					// Loop on the alphabet
+	{
+		for(int j = 0; j < strlen(key); j++)	// Loop on the key
+		{
+			if(dict->regular_dict[i-32] == *(key+j))		// If the letter is in the key
+			{
+				compteur++;
+			}
+		}
+		if(compteur == 0)
+		{
+			dict->encrypted_dict[i+strlen(key)-32-compteurClef] = i;			// Fill the capitalized letter
+			dict->encrypted_dict[i+strlen(key)-32-compteurClef+32] = i+32;	// Fill the lower case letter
+			compteur = 0;
+		}
+		else
+		{
+			compteur = 0;
+			compteurClef++;
+		}
+	}
+	return 0;
+}
+
+/* ---------------------------------------------------------------*/
+
 // Erase a dictionary
 void destroy_dict(dictionary_t* dict)
 {
@@ -59,6 +105,19 @@ void destroy_dict(dictionary_t* dict)
 	}
 }
 
+/* ---------------------------------------------------------------*/
+
+// Capitalize the key
+void capitalize_key(char* key)
+{
+	for(int i = 0; i < strlen(key); i++)
+	{
+		if(*(key+i)>90)
+		{
+			*(key+i)-=32;
+		}
+	}
+}
 /* ---------------------------------------------------------------*/
 
 // Check the validity of a key. Returns 1 if the key is valid, 0 otherwise.

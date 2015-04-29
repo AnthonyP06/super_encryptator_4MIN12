@@ -24,6 +24,12 @@ typedef struct dictionary dictionary_t;
 // Create an new dictionary
 dictionary_t* init_dict();
 
+// Encrypt the dictionary
+int encrypted_dict(dictionary_t* dict, char* key);
+
+// Capitalize the key
+void capitalize_key(char* key);
+
 // Erase a dictionary
 void destroy_dict(dictionary_t* dict);
 
