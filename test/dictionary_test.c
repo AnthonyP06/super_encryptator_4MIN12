@@ -85,6 +85,77 @@ int main(int argc, char** argv)
 		destroy_dict(dict);
 	}
 	
+	// Check function encrypt_dict()
+	{
+		dictionary_t* dict = init_dict();
+		
+		if (dict != NULL)
+		{			
+			// Error cases
+			CHECK(encrypt_dict(NULL, "AZERTY") == -1);
+			CHECK(encrypt_dict(dict, "HELLOWORLD") == -1);
+			
+			CHECK(encrypt_dict(dict, "AZERTY") == 0);
+			
+			// Verification of each characters (letters)
+			CHECK(dict->encrypted_dict[33] == 'A');
+			CHECK(dict->encrypted_dict[34] == 'Z');
+			CHECK(dict->encrypted_dict[35] == 'E');
+			CHECK(dict->encrypted_dict[36] == 'R');
+			CHECK(dict->encrypted_dict[37] == 'T');
+			CHECK(dict->encrypted_dict[38] == 'Y');
+			CHECK(dict->encrypted_dict[39] == 'B');
+			CHECK(dict->encrypted_dict[40] == 'C');
+			CHECK(dict->encrypted_dict[41] == 'D');
+			CHECK(dict->encrypted_dict[42] == 'F');
+			CHECK(dict->encrypted_dict[43] == 'G');
+			CHECK(dict->encrypted_dict[44] == 'H');
+			CHECK(dict->encrypted_dict[45] == 'I');
+			CHECK(dict->encrypted_dict[46] == 'J');
+			CHECK(dict->encrypted_dict[47] == 'K');
+			CHECK(dict->encrypted_dict[48] == 'L');
+			CHECK(dict->encrypted_dict[49] == 'M');
+			CHECK(dict->encrypted_dict[50] == 'N');
+			CHECK(dict->encrypted_dict[51] == 'O');
+			CHECK(dict->encrypted_dict[52] == 'P');
+			CHECK(dict->encrypted_dict[53] == 'Q');
+			CHECK(dict->encrypted_dict[54] == 'S');
+			CHECK(dict->encrypted_dict[55] == 'U');
+			CHECK(dict->encrypted_dict[56] == 'V');
+			CHECK(dict->encrypted_dict[57] == 'W');
+			CHECK(dict->encrypted_dict[58] == 'X');
+			
+			CHECK(dict->encrypted_dict[65] == 'a');
+			CHECK(dict->encrypted_dict[66] == 'z');
+			CHECK(dict->encrypted_dict[67] == 'e');
+			CHECK(dict->encrypted_dict[68] == 'r');
+			CHECK(dict->encrypted_dict[69] == 't');
+			CHECK(dict->encrypted_dict[70] == 'y');
+			CHECK(dict->encrypted_dict[71] == 'b');
+			CHECK(dict->encrypted_dict[72] == 'c');
+			CHECK(dict->encrypted_dict[73] == 'd');
+			CHECK(dict->encrypted_dict[74] == 'f');
+			CHECK(dict->encrypted_dict[75] == 'g');
+			CHECK(dict->encrypted_dict[76] == 'h');
+			CHECK(dict->encrypted_dict[77] == 'i');
+			CHECK(dict->encrypted_dict[78] == 'j');
+			CHECK(dict->encrypted_dict[79] == 'k');
+			CHECK(dict->encrypted_dict[80] == 'l');
+			CHECK(dict->encrypted_dict[81] == 'm');
+			CHECK(dict->encrypted_dict[82] == 'n');
+			CHECK(dict->encrypted_dict[83] == 'o');
+			CHECK(dict->encrypted_dict[84] == 'p');
+			CHECK(dict->encrypted_dict[85] == 'q');
+			CHECK(dict->encrypted_dict[86] == 's');
+			CHECK(dict->encrypted_dict[87] == 'u');
+			CHECK(dict->encrypted_dict[88] == 'v');
+			CHECK(dict->encrypted_dict[89] == 'w');
+			CHECK(dict->encrypted_dict[90] == 'x');
+		}
+		
+		destroy_dict(dict);
+	}
+	
 	// Check the file generation
 	{
 		// Impossible to generate a file from nothing

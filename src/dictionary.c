@@ -118,7 +118,7 @@ void capitalize_key(char* key)
 // Encrypt the dictionary. Returns 0 if everything is OK, -1 otherwise.
 int encrypt_dict(dictionary_t* dict, char* key)
 {
-	if(is_valid(key) == -1)
+	if(is_valid(key) == 0)
 	{
 		return -1;
 	}
