@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 		if (dict != NULL)
 		{
 			CHECK(assign_key(dict, "myKey") == 0);
-			CHECK(strncmp(dict->key,"myKey",64) == 0);
+			CHECK(strncmp(dict->key,"myKey",MAX_KEY_SIZE) == 0);
 		}
 		
 		destroy_dict(dict);
@@ -78,6 +78,36 @@ int main(int argc, char** argv)
 			assign_key(dict, "myKey");
 			CHECK(generate_file(dict, "") == -1);
 			CHECK(generate_file(dict, "dict_test") == 0);
+		}
+		
+		destroy_dict(dict);
+	}
+	
+	// Check the uploading of a file.
+	{
+		dictionary_t* dict = init_dict();
+		
+		if (dict != NULL)
+		{
+			assign_key(dict, "myKey");
+			
+			// Is the fill well generated ?
+			if (generate_file(dict, "dict_test") == -1)
+			{
+				destroy_dict(dict);
+			}
+			
+			// Test with a dictionary not in the repository
+			dictionary_t* dict_up = upload_dict("wrong_dict");
+			CHECK(dict_up == NULL);
+			
+			// Test with an existing dictionary
+			dict_up = upload_dict("dict_test");
+			if(dict_up != NULL);
+			{
+				CHECK(strncmp(dict->key, "myKey", MAX_KEY_SIZE) == 0);
+				CHECK(strncmp(dict->encrypted_dict, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", SIZE_DICT) == 0);
+			}
 		}
 		
 		destroy_dict(dict);
