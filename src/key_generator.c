@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 		assign_key(dict, argv[1]);
 
 		// Encrypt the dictionary
-		if (encrypted_dict(dict, argv[1]) == -1)
+		if (encrypt_dict(dict, argv[1]) == -1)
 		{
 			printf("An error occurred. Dictionary not created.\n");
 			printf("Please re-launch the application.\n");

@@ -116,7 +116,7 @@ void capitalize_key(char* key)
 /* ---------------------------------------------------------------*/
 
 // Encrypt the dictionary. Returns 0 if everything is OK, -1 otherwise.
-int encrypted_dict(dictionary_t* dict, char* key)
+int encrypt_dict(dictionary_t* dict, char* key)
 {
 	if(is_valid(key) == -1)
 	{
@@ -361,7 +361,11 @@ int write_in_file(FILE* src_file, FILE* dst_file, const dictionary_t* dict, cons
 		return 0;
 	}
 	
-	return 0;
+	// Mode 'd'
+	else
+	{
+		return 0;
+	}
 }
 
 /* ---------------------------------------------------------------*/

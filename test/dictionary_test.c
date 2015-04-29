@@ -59,8 +59,8 @@ int main(int argc, char** argv)
 		
 		if (dict != NULL)
 		{
-			CHECK(assign_key(dict, "myKey") == 0);
-			CHECK(strncmp(dict->key,"myKey",MAX_KEY_SIZE) == 0);
+			CHECK(assign_key(dict, "AZERTY") == 0);
+			CHECK(strncmp(dict->key,"AZERTY",MAX_KEY_SIZE) == 0);
 		}
 		
 		destroy_dict(dict);
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 		
 		if (dict != NULL)
 		{
-			assign_key(dict, "myKey");
+			assign_key(dict, "AZERTY");
 			CHECK(generate_dict_file(dict, "") == -1);
 			CHECK(generate_dict_file(dict, "dict_test") == 0);
 		}
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 		
 		if (dict != NULL)
 		{
-			assign_key(dict, "myKey");
+			assign_key(dict, "AZERTY");
 			
 			// Is the fill well generated ?
 			if (generate_dict_file(dict, "dict_test") == -1)
@@ -124,10 +124,41 @@ int main(int argc, char** argv)
 			dict_up = upload_dict("dict_test");
 			if(dict_up != NULL);
 			{
-				CHECK(strncmp(dict->key, "myKey", MAX_KEY_SIZE) == 0);
+				CHECK(strncmp(dict->key, "AZERTY", MAX_KEY_SIZE) == 0);
 				CHECK(strncmp(dict->regular_dict, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", SIZE_DICT) == 0);
 				CHECK(strncmp(dict->encrypted_dict, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", SIZE_DICT) == 0);
 			}
+		}
+		
+		destroy_dict(dict);
+	}
+	
+	// Check function index()
+	{
+		dictionary_t* dict = init_dict();
+		
+		if (dict != NULL)
+		{
+			assign_key(dict, "AZERTY");
+			
+			// After the initialization of a dictionary, characters are in the right order.
+			for (unsigned int i=0; i<SIZE_DICT; ++i)
+			{
+				CHECK(index(*(dict->regular_dict+i), dict) == i);
+			}
+			
+			encrypt_dict(dict, dict->key);
+			
+			// Tests for the first characters.
+			CHECK(index('A', dict) == 33);
+			CHECK(index('Z', dict) == 34);
+			CHECK(index('E', dict) == 35);
+			CHECK(index('R', dict) == 36);
+			CHECK(index('T', dict) == 37);
+			CHECK(index('Y', dict) == 38);
+			CHECK(index('B', dict) == 39);
+			CHECK(index('C', dict) == 40);
+			CHECK(index('D', dict) == 41);
 		}
 		
 		destroy_dict(dict);

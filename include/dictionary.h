@@ -33,7 +33,7 @@ void destroy_dict(dictionary_t* dict);
 int is_valid(const char* key);
 
 // Encrypt the dictionary. Returns 0 if everything is OK, -1 otherwise.
-int encrypted_dict(dictionary_t* dict, char* key);
+int encrypt_dict(dictionary_t* dict, char* key);
 
 // Capitalize the key
 void capitalize_key(char* key);
