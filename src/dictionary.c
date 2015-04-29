@@ -39,7 +39,7 @@ dictionary_t* init_dict()
 	for (unsigned int i = 0; i<SIZE_DICT; ++i)
 	{
 		dict->regular_dict[i] = 32+i;
-		dict->encrypted_dict[i] = 65; //'A'
+		dict->encrypted_dict[i] = 32+i; 
 	}
 	
 	return dict;
