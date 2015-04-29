@@ -59,7 +59,16 @@ dictionary_t* init_dict()
 
 	dict->key = "CBOZD";
 	
-
+	// Capitalize the key (does not change the result)
+	for(int i = 0; i < strlen(dict->key); i++)
+	{
+		if(*(dict->key+i)>90)
+		{
+			*(dict->key+i)-=32;
+		}
+		printf("%c", *(dict->key+i));
+	}
+	
 	// Fill the encrypted dictionary with the key
 
 	for(int i = 0; i < strlen(dict->key); i++)
