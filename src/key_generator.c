@@ -1,152 +1,62 @@
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
-
-
 
 #include "../include/dictionary.h"
 
-
-
-// Create a new dictionary
-
-dictionary_t* init_dict()
-
-{
-
-	dictionary_t* dict = malloc(sizeof(dictionary_t));
-
-	
-
-	// Did the allocation succeed ?
-
-	if (dict == NULL)
-
-	{
-
-		return NULL;
-
-	}
-
-	
-
-	// Everything is OK
-
-	
-
-	// We do not have the key yet
-
-	dict->key = NULL;
-
-	
-
-	// Fill in the ASCII dictionary for both regular and encrypted dictionaries
-
-	for (int i = 0; i<sizeof(dict->regular_dict); ++i)
-
-	{
-
-		dict->regular_dict[i] = 32+i;
-		dict->encrypted_dict[i] = 32+i;
-
-	}
-
-
-
-	// Imagine we have a key
-
-	dict->key = "CBOZD";
-	
-	// Capitalize the key (does not change the result)
-	for(int i = 0; i < strlen(dict->key); i++)
-	{
-		if(*(dict->key+i)>90)
-		{
-			*(dict->key+i)-=32;
-		}
-		printf("%c", *(dict->key+i));
-	}
-	
-	// Fill the encrypted dictionary with the key
-
-	for(int i = 0; i < strlen(dict->key); i++)
-
-	{
-
-		dict->encrypted_dict[i+33] = *(dict->key+i);
-		dict->encrypted_dict[i+65] = dict->encrypted_dict[i+33]+32;
-
-	}
-
-	//Fill the last cases of the encryted dictionary
-	int compteur = 0;							// Boolean
-	int compteurClef = 0;						// Number of letter of the key already read
-	int i = 0;
-	int j = 0;
-	for(i = 65; i <= 90; i++)					// Loop on the alphabet
-	{
-		for(j = 0; j < strlen(dict->key); j++)	// Loop on the key
-		{
-			if(dict->regular_dict[i-32] == *(dict->key+j))		// If the letter is in the key
-			{
-				compteur++;
-			}
-		}
-		if(compteur == 0)
-		{
-			dict->encrypted_dict[i+strlen(dict->key)-32-compteurClef] = i;			// Fill the capitalized letter
-			dict->encrypted_dict[i+strlen(dict->key)-32-compteurClef+32] = i+32;	// Fill the lower case letter
-			compteur = 0;
-		}
-		else
-		{
-			compteur = 0;
-			compteurClef++;
-		}
-	}
-<<<<<<< HEAD
-=======
-
-
-
-	return dict;
-
-}
-
-
-
-// Erase a dictionary
-
-void destroy_dict(dictionary_t* dict)
-
-{
-
-	dict->key = NULL;
-
-	free(dict);
-
-}
-
-
-
 int main(int argc, char** argv)
-
 {
-
-	dictionary_t* dict = init_dict();
-
-	for (int i = 0; i<sizeof(dict->regular_dict); ++i)
-
+	// Are there two arguments ?
+	if (argv[1] == NULL || argv[2] == NULL)
 	{
-		printf("Char %d : %c - %c\n", i, dict->regular_dict[i], dict->encrypted_dict[i]);
-
+		printf("One or two argument(s) missing. Dictionary not created.\n");
+		printf("Please re-launch the application.\n");
+		return -1;
 	}
-
 	
-
-	destroy_dict(dict);
-
->>>>>>> ec15989ae1e3261ff5dcf268131881b0ff7f480c
+	// Are there more than 2 arguments ?
+	if (argv[3] != NULL)
+	{
+		printf("There are more than 2 arguments. Dictionary not created.\n");
+		printf("Please re-launch the application.\n");
+		return -1;
+	}
+	
+	// Correct number of arguments
+	{
+		dictionary_t* dict = init_dict();
+		
+		// Did the initialization succeed ?
+		if (dict == NULL)
+		{
+			printf("An error occurred. Dictionary not created.\n");
+			printf("Please re-launch the application.\n");
+			return -1;
+		}
+		
+		// Is the key valid ?
+		if (is_valid(argv[1]) == 0)
+		{
+			printf("The key is not valid. Dictionary not created.\n");
+			printf("Please re-launch the application.\n");
+			destroy_dict(dict);
+			return -1;
+		}
+		
+		// Assign the key
+		assign_key(dict, argv[1]);
+		
+		// Generate the dictionary.
+		if (generate_file(dict, argv[2]) == -1)
+		{
+			printf("An error occurred. Dictionary not created.\n");
+			printf("Please re-launch the application.\n");
+			destroy_dict(dict);
+			return -1;
+		}
+		
+		destroy_dict(dict);
+		
+		return 0;
+	}
 }
