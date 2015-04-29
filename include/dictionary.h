@@ -1,17 +1,20 @@
 #ifndef _DICTIONARY_H_
 #define _DICTIONARY_H_
 
+#define SIZE_DICT 95 // 95 : 126-32+1 chars to encode
+#define MAX_KEY_SIZE 26 // Impossible to have more encoding chars than the size of alphabet
+
 // A dictionary
 struct dictionary
 {
 	// The key of the dictionary
 	char* key;
 	
-	// The ASCII dictionary, 95 : 126-32+1 char to encode
-	char regular_dict[95]; 
+	// The ASCII dictionary
+	char regular_dict[SIZE_DICT]; 
 	
 	// The encrypted dictionary
-	char encrypted_dict[95];
+	char encrypted_dict[SIZE_DICT];
 };
 
 typedef struct dictionary dictionary_t;
@@ -28,7 +31,7 @@ void destroy_dict(dictionary_t* dict);
 int is_valid(const char* key);
 
 // Assign a key to a dictionary. Returns 0 if everything is OK, -1 otherwise.
-int assign_key(dictionary_t* dict, char* key);
+int assign_key(dictionary_t* dict, const char* key);
 
 // Assign an encrypted dictionary to a dictionary object. Returns 0 if everything is OK, -1 otherwise.
 int assign_encrypted_dict(dictionary_t* dict, const char* encrypted_dict);

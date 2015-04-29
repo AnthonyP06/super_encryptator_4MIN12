@@ -7,6 +7,8 @@ int main(int argc, char** argv)
 {
 	dictionary_t* dict = upload_dict("dict_test");
 	
+	print(dict);
+	
 	FILE* file = fopen("the_little_prince.txt", "r");
 	FILE* encrypt = fopen("encrypted_text.txt", "w+");
 	

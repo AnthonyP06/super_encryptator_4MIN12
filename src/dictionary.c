@@ -4,7 +4,7 @@
 
 #include "../include/dictionary.h"
 
-#define MAX_SIZE 128 //
+#define MAX_SIZE 128 // Maximum size for a dictionary name
 
 /* ---------------------------------------------------------------*/
 
@@ -21,12 +21,22 @@ dictionary_t* init_dict()
 		return NULL;
 	}
 	
+	char* key	= malloc(MAX_KEY_SIZE*sizeof(char));
+	
+	// Did the allocation succeed ?
+	if (key == NULL)
+	{
+		free(dict);
+		return NULL;
+	}
+	
 	// Everything is OK
-	// We do not have the key yet
-	dict->key = NULL;
+	
+	// We do not have the key yet.
+	dict->key = key;
 	
 	// Fill in the ASCII dictionary
-	for (unsigned int i = 0; i<sizeof(dict->regular_dict); ++i)
+	for (unsigned int i = 0; i<SIZE_DICT; ++i)
 	{
 		dict->regular_dict[i] = 32+i;
 		dict->encrypted_dict[i] = 65; //'A'
@@ -43,6 +53,8 @@ void destroy_dict(dictionary_t* dict)
 	if (dict != NULL)
 	{
 		dict->key = NULL;
+		free(dict->key);
+		dict = NULL;
 		free(dict);
 	}
 }
@@ -53,7 +65,7 @@ void destroy_dict(dictionary_t* dict)
 int is_valid(const char* key)
 {
 	// Is the key longer than the alphabet ?
-	if (strlen(key) > 26)
+	if (strlen(key) > MAX_KEY_SIZE)
 	{
 		return 0;
 	}
@@ -90,7 +102,7 @@ int is_valid(const char* key)
 /* ---------------------------------------------------------------*/
 
 // Assign a key to a dictionary. Returns 0 if everything is OK, -1 otherwise.
-int assign_key(dictionary_t* dict, char* key)
+int assign_key(dictionary_t* dict, const char* key)
 {
 	// It's an error to assign a key to an empty dictionary
 	if (dict == NULL)
@@ -99,7 +111,7 @@ int assign_key(dictionary_t* dict, char* key)
 	}
 	else
 	{
-		dict->key = key;
+		strncpy(dict->key, key, MAX_KEY_SIZE);
 		return 0;
 	}
 }
@@ -110,7 +122,7 @@ int assign_key(dictionary_t* dict, char* key)
 int assign_encrypted_dict(dictionary_t* dict, const char* encrypted_dict)
 {
 	// The encrypted dictionary given as a parameter must be 95-chars length.
-	if (strlen(encrypted_dict) != 95)
+	if (strlen(encrypted_dict) != SIZE_DICT)
 	{
 		return -1;
 	}
@@ -122,10 +134,7 @@ int assign_encrypted_dict(dictionary_t* dict, const char* encrypted_dict)
 	}
 	else
 	{
-		for(unsigned int i = 0; i<sizeof(dict->encrypted_dict); ++i)
-		{
-			dict->encrypted_dict[i] = *(encrypted_dict+i);
-		}
+		strncpy(dict->encrypted_dict, encrypted_dict, SIZE_DICT);
 		return 0;
 	}
 }
@@ -137,7 +146,7 @@ int assign_encrypted_dict(dictionary_t* dict, const char* encrypted_dict)
 int index(const char c, const dictionary_t* dict)
 {
 	int position = -1;
-	for (unsigned int i=0; i<sizeof(dict->encrypted_dict); ++i)
+	for (unsigned int i=0; i<SIZE_DICT; ++i)
 	{
 		if (dict->encrypted_dict[i] == c)
 		{
@@ -175,9 +184,9 @@ int generate_file(dictionary_t* dict, const char* dst)
 	// Everything is OK.
 	fwrite(dict->key, sizeof(char), strlen(dict->key), file);
 	fputc('\n', file);
-	fwrite(dict->regular_dict, sizeof(char), sizeof(dict->regular_dict), file);
+	fwrite(dict->regular_dict, sizeof(char), SIZE_DICT, file);
 	fputc('\n', file);
-	fwrite(dict->encrypted_dict, sizeof(char), sizeof(dict->encrypted_dict), file);
+	fwrite(dict->encrypted_dict, sizeof(char), SIZE_DICT, file);
 	
 	fclose(file);
 	
@@ -252,7 +261,8 @@ void print(const dictionary_t* dict)
 {
 	if (dict != NULL)
 	{
-		for (unsigned int i=0; i<sizeof(dict->regular_dict); ++i)
+		printf("Key : %s\n", dict->key);
+		for (unsigned int i=0; i<SIZE_DICT; ++i)
 		{
 			printf("%c <-> %c\n", dict->regular_dict[i], dict->encrypted_dict[i]);
 		}
