@@ -10,7 +10,7 @@
 
 // Create a new dictionary. 
 // The regular dictionary is filled in with ASCII chars from 32 to 126.
-// The encrypted dictionary is initialized with a unique char : 'A'.
+// The encrypted dictionary is initialized with the ASCII order.
 dictionary_t* init_dict()
 {
 	dictionary_t* dict = malloc(sizeof(dictionary_t));
@@ -47,52 +47,6 @@ dictionary_t* init_dict()
 
 /* ---------------------------------------------------------------*/
 
-int encrypted_dict(dictionary_t* dict, char* key)
-{
-	if(is_valid(key) == -1)
-	{
-		return -1;
-	}
-
-	// Capitalize the key (does not change the result)
-	capitalize_key(key);
-	
-	// Fill the encrypted dictionary with the key
-	for(int i = 0; i < strlen(key); i++)
-	{
-		dict->encrypted_dict[i+33] = *(key+i);
-		dict->encrypted_dict[i+65] = dict->encrypted_dict[i+33]+32;
-	}
-
-	//Fill the last cases of the encryted dictionary
-	int compteur = 0;							// Boolean
-	int compteurClef = 0;						// Number of letter of the key already read
-	for(int i = 65; i <= 90; i++)					// Loop on the alphabet
-	{
-		for(int j = 0; j < strlen(key); j++)	// Loop on the key
-		{
-			if(dict->regular_dict[i-32] == *(key+j))		// If the letter is in the key
-			{
-				compteur++;
-			}
-		}
-		if(compteur == 0)
-		{
-			dict->encrypted_dict[i+strlen(key)-32-compteurClef] = i;			// Fill the capitalized letter
-			dict->encrypted_dict[i+strlen(key)-32-compteurClef+32] = i+32;	// Fill the lower case letter
-			compteur = 0;
-		}
-		else
-		{
-			compteur = 0;
-			compteurClef++;
-		}
-	}
-	return 0;
-}
-
-/* ---------------------------------------------------------------*/
-
 // Erase a dictionary
 void destroy_dict(dictionary_t* dict)
 {
@@ -105,19 +59,6 @@ void destroy_dict(dictionary_t* dict)
 	}
 }
 
-/* ---------------------------------------------------------------*/
-
-// Capitalize the key
-void capitalize_key(char* key)
-{
-	for(int i = 0; i < strlen(key); i++)
-	{
-		if(*(key+i)>90)
-		{
-			*(key+i)-=32;
-		}
-	}
-}
 /* ---------------------------------------------------------------*/
 
 // Check the validity of a key. Returns 1 if the key is valid, 0 otherwise.
@@ -156,6 +97,72 @@ int is_valid(const char* key)
 	
 	// Everything is OK
 	return 1;
+}
+
+/* ---------------------------------------------------------------*/
+
+// Capitalize the key
+void capitalize_key(char* key)
+{
+	for(int i = 0; i < strlen(key); ++i)
+	{
+		if(*(key+i)>90)
+		{
+			*(key+i)-=32;
+		}
+	}
+}
+
+/* ---------------------------------------------------------------*/
+
+// Encrypt the dictionary. Returns 0 if everything is OK, -1 otherwise.
+int encrypted_dict(dictionary_t* dict, char* key)
+{
+	if(is_valid(key) == -1)
+	{
+		return -1;
+	}
+	
+	if (dict == NULL)
+	{
+		return -1;
+	}
+
+	// Capitalize the key (does not change the result)
+	capitalize_key(key);
+	
+	// Fill the encrypted dictionary with the key
+	for(int i = 0; i < strlen(key); ++i)
+	{
+		dict->encrypted_dict[i+33] = *(key+i);
+		dict->encrypted_dict[i+65] = dict->encrypted_dict[i+33]+32;
+	}
+
+	//Fill the last cases of the encrypted dictionary
+	int compteur = 0;							// Boolean
+	int compteurClef = 0;						// Number of letter of the key already read
+	for(int i = 65; i <= 90; ++i)					// Loop on the alphabet
+	{
+		for(int j = 0; j < strlen(key); ++j)	// Loop on the key
+		{
+			if(dict->regular_dict[i-32] == *(key+j))		// If the letter is in the key
+			{
+				compteur++;
+			}
+		}
+		if(compteur == 0)
+		{
+			dict->encrypted_dict[i+strlen(key)-32-compteurClef] = i;			// Fill the capitalized letter
+			dict->encrypted_dict[i+strlen(key)-32-compteurClef+32] = i+32;	// Fill the lower case letter
+			compteur = 0;
+		}
+		else
+		{
+			compteur = 0;
+			compteurClef++;
+		}
+	}
+	return 0;
 }
 
 /* ---------------------------------------------------------------*/
@@ -219,7 +226,7 @@ int index(const char c, const dictionary_t* dict)
 
 // Generate a file with the dictionary, with the given name "dst".
 // Returns 0 if everything is OK, -1 otherwise.
-int generate_file(dictionary_t* dict, const char* dst)
+int generate_dict_file(dictionary_t* dict, const char* dst)
 {
 	// Non-existing dictionary.
 	if (dict == NULL)
@@ -303,6 +310,58 @@ dictionary_t* upload_dict(const char* src)
 	// Everything is OK
 	fclose(file);
 	return dict;
+}
+
+/* ---------------------------------------------------------------*/
+
+// Write in a file 'dst_file' from a file 'src_file' using a dictionary 'dict'.
+// If you want to encrypt a file, you must use the mode 'e'.
+// If you want to decrypt a file, you must use the mode 'd'.
+// Returns 0 if everything is OK, -1 otherwise.
+int write_in_file(FILE* src_file, FILE* dst_file, const dictionary_t* dict, const char mode)
+{
+	// Mode not supported
+	if (mode != 'e' && mode != 'd')
+	{
+		printf("This mode is not supported. You must use 'e' (encrypt) or 'd' (decrypt).\n");
+		return -1;
+	}
+	
+	if (src_file == NULL)
+	{
+		return -1;
+	}
+	
+	if (dst_file == NULL)
+	{
+		return -1;
+	}
+	
+	if (dict == NULL)
+	{
+		return -1;
+	}
+	
+	// Mode 'e'
+	if (mode == 'e')
+	{
+		char c = ' ';
+		while (c != EOF)	// EOF : End Of File char
+		{
+			c = fgetc(src_file);
+			if (c == '\n')
+			{
+				fputc(c, dst_file);
+			}
+			else
+			{
+				fputc(dict->encrypted_dict[c-32], dst_file);
+			}
+		}
+		return 0;
+	}
+	
+	return 0;
 }
 
 /* ---------------------------------------------------------------*/

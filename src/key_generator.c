@@ -57,13 +57,13 @@ int main(int argc, char** argv)
 
 		print(dict);
 
-/*		if (generate_file(dict, argv[2]) == -1)
+		if (generate_dict_file(dict, argv[2]) == -1)
 		{
 			printf("An error occurred. Dictionary not created.\n");
 			printf("Please re-launch the application.\n");
 			destroy_dict(dict);
 			return -1;
-		}*/
+		}
 		
 		destroy_dict(dict);
 		

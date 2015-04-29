@@ -22,19 +22,21 @@ typedef struct dictionary dictionary_t;
 /* ----------------------------------------------------------- */
 
 // Create an new dictionary
+// The regular dictionary is filled in with ASCII chars from 32 to 126.
+// The encrypted dictionary is initialized with the ASCII order.
 dictionary_t* init_dict();
-
-// Encrypt the dictionary
-int encrypted_dict(dictionary_t* dict, char* key);
-
-// Capitalize the key
-void capitalize_key(char* key);
 
 // Erase a dictionary
 void destroy_dict(dictionary_t* dict);
 
 // Check the validity of a key. Returns 1 if the key is valid, 0 otherwise.
 int is_valid(const char* key);
+
+// Encrypt the dictionary. Returns 0 if everything is OK, -1 otherwise.
+int encrypted_dict(dictionary_t* dict, char* key);
+
+// Capitalize the key
+void capitalize_key(char* key);
 
 // Assign a key to a dictionary. Returns 0 if everything is OK, -1 otherwise.
 int assign_key(dictionary_t* dict, const char* key);
@@ -48,11 +50,17 @@ int index(const char c, const dictionary_t* dict);
 
 // Generate a file with the dictionary, with the given name "dst".
 // Returns 0 if everything is OK, -1 otherwise.
-int generate_file(dictionary_t* dict, const char* dst);
+int generate_dict_file(dictionary_t* dict, const char* dst);
 
 // Create a dictionary object from a dictionary file named "src".
 // Returns the dictionary is everything is OK, a NULL pointer otherwise.
 dictionary_t* upload_dict(const char* src);
+
+// Write in a file 'dst_file' from a file 'src_file' using a dictionary 'dict'.
+// If you want to encrypt a file, you must use the mode 'e'.
+// If you want to decrypt a file, you must use the mode 'd'.
+// Returns 0 if everything is OK, -1 otherwise.
+int write_in_file(FILE* src_file, FILE* dst_file, const dictionary_t* dict, const char mode);
 
 // Prints both regular and encrypted dictionaries
 void print(const dictionary_t* dict);

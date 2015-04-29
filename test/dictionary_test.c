@@ -88,15 +88,15 @@ int main(int argc, char** argv)
 	// Check the file generation
 	{
 		// Impossible to generate a file from nothing
-		CHECK(generate_file(NULL, "dict_test") == -1);
+		CHECK(generate_dict_file(NULL, "dict_test") == -1);
 		
 		dictionary_t* dict = init_dict();
 		
 		if (dict != NULL)
 		{
 			assign_key(dict, "myKey");
-			CHECK(generate_file(dict, "") == -1);
-			CHECK(generate_file(dict, "dict_test") == 0);
+			CHECK(generate_dict_file(dict, "") == -1);
+			CHECK(generate_dict_file(dict, "dict_test") == 0);
 		}
 		
 		destroy_dict(dict);
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 			assign_key(dict, "myKey");
 			
 			// Is the fill well generated ?
-			if (generate_file(dict, "dict_test") == -1)
+			if (generate_dict_file(dict, "dict_test") == -1)
 			{
 				destroy_dict(dict);
 			}
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
 			{
 				CHECK(strncmp(dict->key, "myKey", MAX_KEY_SIZE) == 0);
 				CHECK(strncmp(dict->regular_dict, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", SIZE_DICT) == 0);
-				CHECK(strncmp(dict->encrypted_dict, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", SIZE_DICT) == 0);
+				CHECK(strncmp(dict->encrypted_dict, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", SIZE_DICT) == 0);
 			}
 		}
 		
