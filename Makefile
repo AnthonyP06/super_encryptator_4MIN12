@@ -28,4 +28,4 @@ clean:
 	rm -rf *.a *.o
 
 distclean: clean
-	rm -rf *.exe dict/*
+	rm -rf *.exe dict/* *.txt

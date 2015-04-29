@@ -55,8 +55,6 @@ int main(int argc, char** argv)
 			return -1;
 		}
 
-		print(dict);
-
 		if (generate_dict_file(dict, argv[2]) == -1)
 		{
 			printf("An error occurred. Dictionary not created.\n");
