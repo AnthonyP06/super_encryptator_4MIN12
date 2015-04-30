@@ -341,13 +341,14 @@ int write_in_file(FILE* src_file, FILE* dst_file, const dictionary_t* dict, cons
 	if (mode == 'e')
 	{
 		char c = ' ';
-		while (c != EOF)	// EOF : End Of File char
+		while ((c = fgetc(src_file)) != EOF)	// EOF : End Of File char
 		{
-			c = fgetc(src_file);
+			// New line
 			if (c == '\n')
 			{
 				fputc(c, dst_file);
 			}
+			// A char to encrypt
 			else
 			{
 				fputc(dict->encrypted_dict[c-32], dst_file);
@@ -359,6 +360,31 @@ int write_in_file(FILE* src_file, FILE* dst_file, const dictionary_t* dict, cons
 	// Mode 'd'
 	else
 	{
+		char c = ' ';
+		while ((c = fgetc(src_file)) != EOF)	// EOF : End Of File char
+		{
+			// New line
+			if (c == '\n')
+			{
+				fputc(c, dst_file);
+			}
+			
+			// A char to decrypt
+			else
+			{
+				int position = index(c, dict);
+				
+				// Is the char in the dictionary ?
+				if (position == -1)
+				{
+					return -1;
+				}
+				else
+				{
+					fputc(dict->regular_dict[position], dst_file);
+				}
+			}
+		}
 		return 0;
 	}
 }
