@@ -29,3 +29,4 @@ clean:
 
 distclean: clean
 	rm -rf *.exe dict/* *.txt
+	rm -rf key_generator encrypt tests
