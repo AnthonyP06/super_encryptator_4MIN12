@@ -50,13 +50,8 @@ dictionary_t* init_dict()
 // Erase a dictionary
 void destroy_dict(dictionary_t* dict)
 {
-	if (dict != NULL)
-	{
-		dict->key = NULL;
-		free(dict->key);
-		dict = NULL;
-		free(dict);
-	}
+	free(dict->key);
+	free(dict);
 }
 
 /* ---------------------------------------------------------------*/
