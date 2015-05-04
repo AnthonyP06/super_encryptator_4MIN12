@@ -31,7 +31,7 @@ How to use the Super-Encryptator ?
 * Decrypt a text file: 
 	Use the program decrypt with 3 arguments: the dictionary file, the encrypted text file to decrypt, the output text file name.
 	E.G.: Use 'dict1' to decrypt 'enc.txt' into 'dec.txt'
-	WINDOWS: `./decrypt.exe dict1 enc.txt dec.txt`
-	MAC/UNIX: `./decrypt dict1 enc.txt dec.txt`
+	- WINDOWS: `./decrypt.exe dict1 enc.txt dec.txt`
+	- MAC/UNIX: `./decrypt dict1 enc.txt dec.txt`
 		
 For further information about the specs and the encrypting method, please have a look on file 'cryptation.pdf'.
